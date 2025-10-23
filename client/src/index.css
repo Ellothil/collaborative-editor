@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* biome-ignore lint/suspicious/noUnknownAtRules: false positive */
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-hover: #2563eb;
+  --color-secondary: #ef4444;
+  --color-secondary-hover: #ef4444;
+  --color-tertiary: #f59e0b;
+  --color-tertiary-hover: #f59e0b;
+
+  /* very light grey */
+  --color-foreground: #f1f5f9;
+  /* very dark grey */
+  --color-background: #1e293b;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
