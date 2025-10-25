@@ -1,6 +1,7 @@
+/** biome-ignore-all lint/suspicious/noUnknownAtRules: allow tailwind @rules */
 @import "tailwindcss";
 
-/* biome-ignore lint/suspicious/noUnknownAtRules: false positive */
+/* Base color setup */
 @theme {
   --color-primary: #2563eb;
   --color-primary-hover: #2563eb;
@@ -13,9 +14,11 @@
   --color-foreground: #f1f5f9;
   /* very dark grey */
   --color-background: #1e293b;
+  /* light grey */
   --color-muted: #94a3b8;
 }
 
+/* Base styles */
 @layer base {
   * {
     @apply border-foreground bg-background text-foreground;

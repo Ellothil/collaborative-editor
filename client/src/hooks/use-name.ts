@@ -59,20 +59,31 @@ const animals = [
   "Whale",
 ];
 
+/**
+ * Returns a random element from a given list.
+ *
+ * @param {string[]} list - The list to get a random element from.
+ * @returns {string} A random element from the given list.
+ */
 const getRandomElement = (list: string[]): string =>
   list[Math.floor(Math.random() * list.length)];
 
+/**
+ * Generates a random user with a composite name and color.
+ * Name combines an adjective and an animal (e.g., "BraveFox").
+ */
 const generateRandomUser = (): User => ({
   name: `${getRandomElement(adjectives)}${getRandomElement(animals)}`,
   color: getRandomElement(userColors),
 });
 
-export const useName = (): {
-  user: User;
-} => {
+/**
+ * Returns the generated random user.
+ *
+ * @returns {User} A user object with a name and color.
+ */
+export const useName = (): User => {
   const user = generateRandomUser();
 
-  return {
-    user,
-  };
+  return user;
 };

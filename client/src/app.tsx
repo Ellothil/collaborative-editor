@@ -1,9 +1,15 @@
+import type { JSX } from "react";
 import { EditorComponent } from "./components/editor";
 import { useTiptapEditor } from "./hooks/use-editor";
 import { useName } from "./hooks/use-name";
 
-function App() {
-  const { user } = useName();
+/**
+ * The main application component.
+ *
+ * @returns {JSX.Element} The JSX element representing the application base.
+ */
+function App(): JSX.Element {
+  const user = useName();
 
   const editor = useTiptapEditor(user);
 

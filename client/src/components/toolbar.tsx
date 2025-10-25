@@ -1,12 +1,35 @@
 import type { Editor } from "@tiptap/react";
 import type React from "react";
+import type { JSX } from "react";
 import { ToolbarButton } from "./toolbar-button";
 
 type ToolbarProps = {
   editor: Editor | null;
 };
 
-export const Toolbar: React.FC<ToolbarProps> = ({ editor }) => {
+/**
+ * A component that renders a toolbar for a Tiptap editor.
+ * If the given editor is null, the component will return null.
+ * The toolbar contains buttons for the following formatting options:
+ * - Bold
+ * - Italic
+ * - Strikethrough
+ * - Highlight
+ * - Heading 1
+ * - Heading 2
+ * - Heading 3
+ * - Bullet list
+ * - Ordered list
+ * - Code block
+ * - Blockquote
+ * - Horizontal rule
+ *
+ * @param {Editor | null} editor - The Tiptap editor instance.
+ * @returns {JSX.Element | null} A JSX element representing the toolbar component or null if the editor is null.
+ */
+export const Toolbar: React.FC<ToolbarProps> = ({
+  editor,
+}): JSX.Element | null => {
   if (!editor) {
     return null;
   }
