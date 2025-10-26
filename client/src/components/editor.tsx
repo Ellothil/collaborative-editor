@@ -13,7 +13,7 @@ type EditorProps = {
  * @returns {JSX.Element} A JSX element representing the editor component.
  */
 export const EditorComponent = ({ editor }: EditorProps): JSX.Element => (
-  <div className="flex w-full grow flex-col overflow-y-auto border">
+  <div className="flex h-full grow flex-col overflow-y-auto border">
     <Toolbar editor={editor} />
     <EditorContent
       className="h-full flex-1 overflow-y-auto p-8"
