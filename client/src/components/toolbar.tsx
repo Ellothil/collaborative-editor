@@ -1,10 +1,12 @@
-import type { Editor } from "@tiptap/react";
+import { type Editor, useEditorState } from "@tiptap/react";
 import type React from "react";
 import type { JSX } from "react";
 import { ToolbarButton } from "./toolbar-button";
 
 type ToolbarProps = {
   editor: Editor | null;
+  isSidebarCollapsed: boolean;
+  setIsSidebarCollapsed: (collapsed: boolean) => void;
 };
 
 /**
@@ -29,7 +31,26 @@ type ToolbarProps = {
  */
 export const Toolbar: React.FC<ToolbarProps> = ({
   editor,
+  isSidebarCollapsed,
+  setIsSidebarCollapsed,
 }): JSX.Element | null => {
+  const editorState = useEditorState({
+    editor,
+    selector: (ctx) => ({
+      isBold: ctx.editor?.isActive("bold") ?? false,
+      isItalic: ctx.editor?.isActive("italic") ?? false,
+      isStrike: ctx.editor?.isActive("strike") ?? false,
+      isCode: ctx.editor?.isActive("code") ?? false,
+      isHeading1: ctx.editor?.isActive("heading", { level: 1 }) ?? false,
+      isHeading2: ctx.editor?.isActive("heading", { level: 2 }) ?? false,
+      isHeading3: ctx.editor?.isActive("heading", { level: 3 }) ?? false,
+      isBulletList: ctx.editor?.isActive("bulletList") ?? false,
+      isOrderedList: ctx.editor?.isActive("orderedList") ?? false,
+      isCodeBlock: ctx.editor?.isActive("codeBlock") ?? false,
+      isBlockquote: ctx.editor?.isActive("blockquote") ?? false,
+    }),
+  });
+
   if (!editor) {
     return null;
   }
@@ -98,16 +119,39 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   ];
 
   return (
-    <div className="flex flex-wrap items-center gap-2 border-b px-8 py-4">
-      {toolbarButtons.map((button) => (
-        <ToolbarButton
-          display={button.display}
-          key={button.name}
-          name={button.name}
-          onClick={button.onClick}
-          title={button.name}
-        />
-      ))}
+    <div className="relative flex border-b px-8 py-4">
+      <div className="flex flex-wrap items-center gap-2">
+        {toolbarButtons.map((button) => (
+          <ToolbarButton
+            display={button.display}
+            isActive={
+              (editorState?.isBold && button.name === "bold") ||
+              (editorState?.isItalic && button.name === "italic") ||
+              (editorState?.isStrike && button.name === "strike") ||
+              (editorState?.isCode && button.name === "code") ||
+              (editorState?.isHeading1 && button.name === "heading1") ||
+              (editorState?.isHeading2 && button.name === "heading2") ||
+              (editorState?.isHeading3 && button.name === "heading3") ||
+              (editorState?.isBulletList && button.name === "bulletList") ||
+              (editorState?.isOrderedList && button.name === "orderedList") ||
+              (editorState?.isCodeBlock && button.name === "codeBlock") ||
+              (editorState?.isBlockquote && button.name === "blockquote")
+            }
+            key={button.name}
+            name={button.name}
+            onClick={button.onClick}
+            title={button.name}
+          />
+        ))}
+      </div>
+      <button
+        aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        className="absolute top-5 right-0 m-1 rounded px-2 py-1"
+        onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        type="button"
+      >
+        {isSidebarCollapsed ? "◀" : "▶"}
+      </button>
     </div>
   );
 };

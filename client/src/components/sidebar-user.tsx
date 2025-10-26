@@ -1,32 +1,21 @@
-import { useState } from "react";
 import { useCollaboration } from "@/hooks/use-collaboration";
 import { useOnlineUsers } from "@/hooks/use-online-users";
 import type { User } from "@/types/user";
 
 type SidebarUserProps = {
   user: User;
+  isCollapsed: boolean;
 };
 
-export const SidebarUser = ({ user }: SidebarUserProps) => {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-
+export const SidebarUser = ({ user, isCollapsed }: SidebarUserProps) => {
   // Get the provider and access online users
   const { provider } = useCollaboration(user);
   const { onlineUsers, currentUser } = useOnlineUsers(provider);
 
   return (
     <div
-      className={`relative flex h-full flex-col ${isCollapsed ? "w-0" : "w-64 border border-l-0"}`}
+      className={`flex h-full flex-col ${isCollapsed ? "w-0" : "w-64 overflow-hidden rounded-r-xl border border-l-0 bg-clip-padding"}`}
     >
-      {/* Collapse toggle */}
-      <button
-        className="-translate-y-1/2 -left-4 absolute top-1/2 flex size-8 items-center justify-center rounded-full border bg-background hover:bg-background-hover"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        type="button"
-      >
-        <span className="bg-transparent">{isCollapsed ? "←" : "→"}</span>
-      </button>
-
       {/* All users section */}
       {!isCollapsed && (
         <div className="flex-1 overflow-y-auto">
