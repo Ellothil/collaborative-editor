@@ -18,7 +18,7 @@ export const useTiptapEditor = (user: User): Editor => {
 
   const editor: Editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({ undoRedo: false }),
       Highlight,
       Typography,
       Collaboration.configure({ document: yDoc }),

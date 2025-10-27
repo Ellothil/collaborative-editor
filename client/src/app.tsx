@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { type JSX, useState } from "react";
 import { EditorComponent } from "./components/editor";
 import { SidebarUser } from "./components/sidebar-user";
 import { useTiptapEditor } from "./hooks/use-editor";
@@ -13,11 +13,16 @@ function App(): JSX.Element {
   const user = useName();
 
   const editor = useTiptapEditor(user);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-background p-8 text-foreground">
-      <EditorComponent editor={editor} />
-      <SidebarUser user={user} />
+    <div className="flex h-screen w-screen items-center justify-center bg-linear-to-r from-[#5c8fd6] to-[#09288f69] p-8 text-foreground">
+      <EditorComponent
+        editor={editor}
+        isSidebarCollapsed={isSidebarCollapsed}
+        setIsSidebarCollapsed={setIsSidebarCollapsed}
+      />
+      <SidebarUser isCollapsed={isSidebarCollapsed} user={user} />
     </div>
   );
 }
