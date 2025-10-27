@@ -27,7 +27,7 @@ export const EditorComponent = ({
   setIsUserBarCollapsed,
 }: EditorProps): JSX.Element => (
   <div
-    className={`flex h-full grow flex-col overflow-y-auto ${isFilesBarCollapsed && "rounded-l-xl"} ${isUserBarCollapsed && "rounded-r-xl"} border`}
+    className={`flex h-full grow flex-col overflow-y-auto transition-all duration-300 ease-in-out ${isFilesBarCollapsed && "rounded-l-xl"} ${isUserBarCollapsed && "rounded-r-xl"} border`}
   >
     <Toolbar
       editor={editor}

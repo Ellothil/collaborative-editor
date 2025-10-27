@@ -14,7 +14,7 @@ import { SidebarFiles } from "./components/sidebar-files";
 function App(): JSX.Element {
   const [currentDocName, setCurrentDocName] = useState<string>("welcome-doc");
 
-  const user = useName();
+  const [user] = useState(useName());
   const { provider, yDoc } = useCollaboration(user, currentDocName);
   const editor = useTiptapEditor(user, provider, yDoc);
 
