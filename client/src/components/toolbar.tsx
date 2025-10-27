@@ -131,7 +131,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
   return (
     <div className="relative flex border-b px-8 py-4">
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2 pr-10">
         {toolbarButtons.map((button) => (
           <ToolbarButton
             display={button.display}
