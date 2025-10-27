@@ -1,4 +1,19 @@
 import { type Editor, useEditorState } from "@tiptap/react";
+import {
+  Bold,
+  Code,
+  Heading1,
+  Heading2,
+  Heading3,
+  Highlighter,
+  Italic,
+  List,
+  ListOrdered,
+  MessageSquareQuote,
+  PanelRightClose,
+  PanelRightOpen,
+  Strikethrough,
+} from "lucide-react";
 import type React from "react";
 import type { JSX } from "react";
 import { ToolbarButton } from "./toolbar-button";
@@ -58,63 +73,58 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const toolbarButtons = [
     {
       name: "bold",
-      display: <strong className="bg-transparent">B</strong>,
+      display: <Bold className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleBold().run(),
     },
     {
       name: "italic",
-      display: <em className="bg-transparent">I</em>,
+      display: <Italic className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleItalic().run(),
     },
     {
       name: "strikethrough",
-      display: <s className="bg-transparent">S</s>,
+      display: <Strikethrough className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleStrike().run(),
     },
     {
       name: "highlight",
-      display: <mark className="bg-transparent">H</mark>,
+      display: <Highlighter className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleHighlight().run(),
     },
     {
-      name: "heading",
-      display: <h1 className="bg-transparent">H1</h1>,
+      name: "heading 1",
+      display: <Heading1 className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
     },
     {
-      name: "heading2",
-      display: <h2 className="bg-transparent">H2</h2>,
+      name: "heading 2",
+      display: <Heading2 className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
     },
     {
-      name: "heading3",
-      display: <h3 className="bg-transparent">H3</h3>,
+      name: "heading 3",
+      display: <Heading3 className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
     },
     {
-      name: "bulletList",
-      display: <ul className="bg-transparent">•</ul>,
+      name: "bullet list",
+      display: <List className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleBulletList().run(),
     },
     {
       name: "orderedList",
-      display: <ol className="bg-transparent">1.</ol>,
+      display: <ListOrdered className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleOrderedList().run(),
     },
     {
       name: "codeBlock",
-      display: <p className="bg-transparent">{"</>"}</p>,
+      display: <Code className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleCodeBlock().run(),
     },
     {
       name: "blockquote",
-      display: <p className="bg-transparent">{'"'}</p>,
+      display: <MessageSquareQuote className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleBlockquote().run(),
-    },
-    {
-      name: "horizontalRule",
-      display: <p className="bg-transparent">—</p>,
-      onClick: () => editor.chain().focus().setHorizontalRule().run(),
     },
   ];
 
@@ -146,11 +156,15 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       </div>
       <button
         aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className="absolute top-5 right-0 m-1 rounded px-2 py-1"
+        className="absolute top-5 right-1 m-1 rounded border px-2 py-1 hover:bg-background-hover"
         onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         type="button"
       >
-        {isSidebarCollapsed ? "◀" : "▶"}
+        {isSidebarCollapsed ? (
+          <PanelRightOpen className="bg-transparent" />
+        ) : (
+          <PanelRightClose className="bg-transparent" />
+        )}
       </button>
     </div>
   );
