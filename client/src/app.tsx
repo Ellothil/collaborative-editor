@@ -16,7 +16,7 @@ function App(): JSX.Element {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-background p-8 text-foreground">
+    <div className="flex h-screen w-screen items-center justify-center bg-linear-to-r from-[#5c8fd6] to-[#09288f69] p-8 text-foreground">
       <EditorComponent
         editor={editor}
         isSidebarCollapsed={isSidebarCollapsed}
