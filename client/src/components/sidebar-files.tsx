@@ -1,29 +1,22 @@
 import type { HocuspocusProvider } from "@hocuspocus/provider";
-import { useOnlineUsers } from "@/hooks/use-online-users";
 
-type SidebarUserProps = {
+type SidebarFilesProps = {
   isCollapsed: boolean;
   provider: HocuspocusProvider;
 };
 
-export const SidebarUser = ({ isCollapsed, provider }: SidebarUserProps) => {
-  // Get the provider and access online users
-
-  const { onlineUsers, currentUser } = useOnlineUsers(provider);
-
+export const SidebarFiles = ({ isCollapsed, provider }: SidebarFilesProps) => {
   return (
     <div
-      className={`flex h-full flex-col transition-all duration-300 ease-in-out ${isCollapsed ? "w-0 opacity-0" : "w-64 overflow-hidden rounded-r-xl border bg-clip-padding opacity-100"}`}
+      className={`flex h-full flex-col transition-all duration-300 ease-in-out ${isCollapsed ? "w-0 opacity-0" : "w-64 overflow-hidden rounded-l-xl border bg-clip-padding opacity-100"}`}
     >
       <div
         className={`flex-1 overflow-y-auto transition-opacity duration-300 ${isCollapsed ? "opacity-0" : "opacity-100"}`}
       >
         <div className="px-4 py-2">
-          <h3 className="mb-2 h-6 font-semibold text-sm">
-            Online Users ({onlineUsers.length})
-          </h3>
+          <h3 className="mb-2 h-6 font-semibold text-sm">Files</h3>
 
-          {onlineUsers.length === 0 ? (
+          {/* {onlineUsers.length === 0 ? (
             <p>No users online</p>
           ) : (
             <div className="flex flex-col gap-2">
@@ -43,7 +36,7 @@ export const SidebarUser = ({ isCollapsed, provider }: SidebarUserProps) => {
                 </div>
               ))}
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

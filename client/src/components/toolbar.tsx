@@ -10,6 +10,8 @@ import {
   List,
   ListOrdered,
   MessageSquareQuote,
+  PanelLeftClose,
+  PanelLeftOpen,
   PanelRightClose,
   PanelRightOpen,
   Strikethrough,
@@ -20,8 +22,10 @@ import { ToolbarButton } from "./toolbar-button";
 
 type ToolbarProps = {
   editor: Editor | null;
-  isSidebarCollapsed: boolean;
-  setIsSidebarCollapsed: (collapsed: boolean) => void;
+  isFilesBarCollapsed: boolean;
+  isUserBarCollapsed: boolean;
+  setIsFilesBarCollapsed: (collapsed: boolean) => void;
+  setIsUserBarCollapsed: (collapsed: boolean) => void;
 };
 
 /**
@@ -46,8 +50,10 @@ type ToolbarProps = {
  */
 export const Toolbar: React.FC<ToolbarProps> = ({
   editor,
-  isSidebarCollapsed,
-  setIsSidebarCollapsed,
+  setIsUserBarCollapsed,
+  isUserBarCollapsed,
+  setIsFilesBarCollapsed,
+  isFilesBarCollapsed,
 }): JSX.Element | null => {
   const editorState = useEditorState({
     editor,
@@ -131,7 +137,23 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
   return (
     <div className="relative flex border-b px-8 py-4">
-      <div className="flex flex-wrap items-center gap-2 pr-10">
+      <button
+        aria-label={
+          isFilesBarCollapsed
+            ? "Expand files sidebar"
+            : "Collapse files sidebar"
+        }
+        className="absolute top-5 left-1 ml-1 rounded border px-2 py-1 hover:bg-background-hover"
+        onClick={() => setIsFilesBarCollapsed(!isFilesBarCollapsed)}
+        type="button"
+      >
+        {isFilesBarCollapsed ? (
+          <PanelLeftOpen className="bg-transparent" />
+        ) : (
+          <PanelLeftClose className="bg-transparent" />
+        )}
+      </button>
+      <div className="flex grow flex-wrap items-center justify-center gap-2 px-10">
         {toolbarButtons.map((button) => (
           <ToolbarButton
             display={button.display}
@@ -157,12 +179,14 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         ))}
       </div>
       <button
-        aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className="absolute top-5 right-1 m-1 rounded border px-2 py-1 hover:bg-background-hover"
-        onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        aria-label={
+          isUserBarCollapsed ? "Expand user sidebar" : "Collapse user sidebar"
+        }
+        className="absolute top-5 right-1 mr-1 rounded border px-2 py-1 hover:bg-background-hover"
+        onClick={() => setIsUserBarCollapsed(!isUserBarCollapsed)}
         type="button"
       >
-        {isSidebarCollapsed ? (
+        {isUserBarCollapsed ? (
           <PanelRightOpen className="bg-transparent" />
         ) : (
           <PanelRightClose className="bg-transparent" />

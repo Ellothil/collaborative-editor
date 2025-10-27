@@ -25,7 +25,7 @@ type CollaborationResult = {
  */
 export const useCollaboration = (
   user: User,
-  documentName = "demo-doc"
+  documentName: string
 ): CollaborationResult => {
   const providerRef = useRef<HocuspocusProvider | null>(null);
   const yDocRef = useRef<Doc | null>(null);

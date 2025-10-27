@@ -1,8 +1,10 @@
 import { type JSX, useState } from "react";
-import { EditorComponent } from "./components/editor";
-import { SidebarUser } from "./components/sidebar-user";
-import { useTiptapEditor } from "./hooks/use-editor";
-import { useName } from "./hooks/use-name";
+import { EditorComponent } from "@/components/editor";
+import { SidebarUser } from "@/components/sidebar-user";
+import { useCollaboration } from "@/hooks/use-collaboration";
+import { useTiptapEditor } from "@/hooks/use-editor";
+import { useName } from "@/hooks/use-name";
+import { SidebarFiles } from "./components/sidebar-files";
 
 /**
  * The main application component.
@@ -10,19 +12,26 @@ import { useName } from "./hooks/use-name";
  * @returns {JSX.Element} The JSX element representing the application base.
  */
 function App(): JSX.Element {
-  const user = useName();
+  const [currentDocName, setCurrentDocName] = useState<string>("welcome-doc");
 
-  const editor = useTiptapEditor(user);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const user = useName();
+  const { provider, yDoc } = useCollaboration(user, currentDocName);
+  const editor = useTiptapEditor(user, provider, yDoc);
+
+  const [isUserBarCollapsed, setIsUserBarCollapsed] = useState(false);
+  const [isFilesBarCollapsed, setIsFilesBarCollapsed] = useState(false);
 
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-linear-to-r from-[#5c8fd6] to-[#09288f69] p-8 text-foreground">
+      <SidebarFiles isCollapsed={isFilesBarCollapsed} provider={provider} />
       <EditorComponent
         editor={editor}
-        isSidebarCollapsed={isSidebarCollapsed}
-        setIsSidebarCollapsed={setIsSidebarCollapsed}
+        isFilesBarCollapsed={isFilesBarCollapsed}
+        isUserBarCollapsed={isUserBarCollapsed}
+        setIsFilesBarCollapsed={setIsFilesBarCollapsed}
+        setIsUserBarCollapsed={setIsUserBarCollapsed}
       />
-      <SidebarUser isCollapsed={isSidebarCollapsed} user={user} />
+      <SidebarUser isCollapsed={isUserBarCollapsed} provider={provider} />
     </div>
   );
 }
