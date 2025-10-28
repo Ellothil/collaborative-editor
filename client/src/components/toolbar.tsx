@@ -41,7 +41,7 @@ type ToolbarProps = {
  * - Heading 3
  * - Bullet list
  * - Ordered list
- * - Code block
+ * - codeblock
  * - Blockquote
  * - Horizontal rule
  *
@@ -124,7 +124,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       onClick: () => editor.chain().focus().toggleOrderedList().run(),
     },
     {
-      name: "code block",
+      name: "codeblock",
       display: <Code className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleCodeBlock().run(),
     },
@@ -160,14 +160,14 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             isActive={
               (editorState?.isBold && button.name === "bold") ||
               (editorState?.isItalic && button.name === "italic") ||
-              (editorState?.isStrike && button.name === "strike") ||
+              (editorState?.isStrike && button.name === "strikethrough") ||
               (editorState?.isCode && button.name === "code") ||
               (editorState?.isHeading1 && button.name === "heading 1") ||
               (editorState?.isHeading2 && button.name === "heading 2") ||
               (editorState?.isHeading3 && button.name === "heading 3") ||
               (editorState?.isBulletList && button.name === "bullet list") ||
               (editorState?.isOrderedList && button.name === "ordered list") ||
-              (editorState?.isCodeBlock && button.name === "code block") ||
+              (editorState?.isCodeBlock && button.name === "codeblock") ||
               (editorState?.isBlockquote && button.name === "blockquote") ||
               (editorState?.isHighlight && button.name === "highlight")
             }

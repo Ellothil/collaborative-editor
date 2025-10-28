@@ -1,5 +1,5 @@
 import { HocuspocusProvider } from "@hocuspocus/provider";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { Doc } from "yjs";
 import type { User } from "@/types/user";
 
@@ -25,52 +25,39 @@ type CollaborationResult = {
  */
 export const useCollaboration = (
   user: User,
-  documentName: string
+  documentName = "welcome"
 ): CollaborationResult => {
-  const providerRef = useRef<HocuspocusProvider | null>(null);
-  const yDocRef = useRef<Doc | null>(null);
-
-  // Use shared instances
-  if (providerRef.current === null) {
+  const { provider, yDoc } = useMemo(() => {
     const existing = sharedDocs.get(documentName);
 
     if (existing) {
-      providerRef.current = existing.provider;
-      yDocRef.current = existing.yDoc;
-    } else {
-      const yDoc = new Doc();
-      const provider = new HocuspocusProvider({
-        url: "ws://127.0.0.1:1234",
-        name: documentName,
-        document: yDoc,
-      });
-
-      provider.setAwarenessField("user", {
-        name: user.name,
-        color: user.color,
-      });
-
-      sharedDocs.set(documentName, { provider, yDoc });
-      providerRef.current = provider;
-      yDocRef.current = yDoc;
+      return existing;
     }
-  }
 
+    const newDoc = new Doc();
+    const newProvider = new HocuspocusProvider({
+      url: "ws://localhost:1234",
+      name: documentName,
+      document: newDoc,
+    });
+
+    newProvider.setAwarenessField("user", {
+      name: user.name,
+      color: user.color,
+    });
+
+    const result = { provider: newProvider, yDoc: newDoc };
+    sharedDocs.set(documentName, result);
+    return result;
+  }, [documentName, user.name, user.color]);
+
+  // Update awareness when user changes
   useEffect(() => {
-    if (providerRef.current) {
-      providerRef.current.setAwarenessField("user", {
-        name: user.name,
-        color: user.color,
-      });
-    }
-  }, [user.name, user.color]);
+    provider.setAwarenessField("user", {
+      name: user.name,
+      color: user.color,
+    });
+  }, [user.name, user.color, provider]);
 
-  if (providerRef.current === null || yDocRef.current === null) {
-    throw new Error("Provider and yDoc must be initialized");
-  }
-
-  return {
-    provider: providerRef.current,
-    yDoc: yDocRef.current,
-  };
+  return { provider, yDoc };
 };

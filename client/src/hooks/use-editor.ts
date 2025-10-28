@@ -19,15 +19,18 @@ export const useTiptapEditor = (
   provider: HocuspocusProvider,
   yDoc: Doc
 ): Editor => {
-  const editor: Editor = useEditor({
-    extensions: [
-      StarterKit.configure({ undoRedo: false }),
-      Highlight,
-      Typography,
-      Collaboration.configure({ document: yDoc }),
-      CollaborationCaret.configure({ provider, user }),
-    ],
-  });
+  const editor: Editor = useEditor(
+    {
+      extensions: [
+        StarterKit.configure({ undoRedo: false }),
+        Highlight,
+        Typography,
+        Collaboration.configure({ document: yDoc }),
+        CollaborationCaret.configure({ provider, user }),
+      ],
+    },
+    [provider, yDoc, user]
+  );
 
   return editor;
 };
