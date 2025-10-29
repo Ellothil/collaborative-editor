@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
 // biome-ignore lint/style/useImportType: <>
 import { type Document, DocumentsService } from "./documents.service";
 
@@ -26,5 +26,15 @@ export class DocumentsController {
   @Post()
   createDocument(@Body() body: { name: string }): Promise<Document> {
     return this.documentsService.createDocument(body.name);
+  }
+
+  /**
+   * Delete a document
+   * @param name Document name
+   * @returns True if document was deleted
+   */
+  @Delete()
+  deleteDocument(@Body() body: { name: string }): Promise<boolean> {
+    return this.documentsService.deleteDocument(body.name);
   }
 }

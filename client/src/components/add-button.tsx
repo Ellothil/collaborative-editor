@@ -2,14 +2,14 @@ import axios from "axios";
 import { Plus } from "lucide-react";
 
 type AddButtonProps = {
-  fetchDocuments: () => void;
+  setCurrentDoc: (name: string) => void;
 };
 
-export const AddButton = ({ fetchDocuments }: AddButtonProps) => {
+export const AddButton = ({ setCurrentDoc }: AddButtonProps) => {
   const createNewDocument = async (name: string) => {
     try {
       await axios.post("http://localhost:3000/api/documents", { name });
-      await fetchDocuments();
+      setCurrentDoc(name);
     } catch (err) {
       // biome-ignore lint/style/noMagicNumbers: <HTTP 409 Conflict>
       if (axios.isAxiosError(err) && err.response?.status === 409) {

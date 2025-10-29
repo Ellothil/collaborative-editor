@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { EventEmitter } from "node:events";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Pool } from "pg";
 
 // Initialize PostgreSQL connection pool
@@ -60,7 +60,7 @@ export class DocumentsService {
         [name]
       );
       const document = result.rows[0];
-      this.eventEmitter.emit('documentCreated', document);
+      this.eventEmitter.emit("documentCreated", document);
       return document;
     } catch (error) {
       if (error.code === "23505") {
@@ -107,7 +107,11 @@ export class DocumentsService {
       const result = await pool.query("DELETE FROM documents WHERE name = $1", [
         name,
       ]);
-      return (result.rowCount ?? 0) > 0;
+      const deleted = (result.rowCount ?? 0) > 0;
+      if (deleted) {
+        this.eventEmitter.emit("documentDeleted", { name });
+      }
+      return deleted;
     } catch (error) {
       throw new HttpException(
         "Failed to delete document",

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { AddButton } from "./add-button";
+import { DeleteButton } from "./delete-button";
 
 type Document = {
   name: string;
@@ -44,7 +45,7 @@ export const SidebarFiles = ({
     fetchDocuments();
   }, [fetchDocuments]);
 
-  // Refresh documents when a new document is created
+  // Refresh documents when a new document is created or deleted
   useEffect(() => {
     const socket = io("http://localhost:3000");
 
@@ -52,7 +53,7 @@ export const SidebarFiles = ({
       fetchDocuments();
     });
 
-    socket.on("documentCreated", () => {
+    socket.on("documentDeleted", () => {
       fetchDocuments();
     });
 
@@ -60,6 +61,20 @@ export const SidebarFiles = ({
       socket.disconnect();
     };
   }, [fetchDocuments]);
+
+  // Handle current document deletion by checking documents array
+  useEffect(() => {
+    if (loading || error) {
+      return;
+    }
+
+    const currentDocStillExists = documents.some(
+      (doc) => doc.name === currentDoc
+    );
+    if (!currentDocStillExists && currentDoc !== "Welcome (undeletable)") {
+      setCurrentDoc("Welcome (undeletable)");
+    }
+  }, [documents, currentDoc, setCurrentDoc, loading, error]);
 
   return (
     <div
@@ -72,7 +87,7 @@ export const SidebarFiles = ({
           <h3 className="mb-2 flex h-6 justify-center border-line bg-linear-to-r from-start to-end bg-clip-text font-semibold text-transparent text-xl">
             Files
           </h3>
-          <AddButton fetchDocuments={fetchDocuments} />
+          <AddButton setCurrentDoc={setCurrentDoc} />
           {loading && <div />}
 
           {error && (
@@ -94,16 +109,20 @@ export const SidebarFiles = ({
                 <p className="text-gray-500 text-sm">No documents found</p>
               ) : (
                 documents.map((doc) => (
-                  <button
-                    className={`flex cursor-pointer items-center justify-between rounded-md p-2 text-md transition-colors hover:bg-gray-100/50 ${currentDoc === doc.name && "font-bold"}`}
-                    key={doc.name}
-                    onClick={() => {
-                      setCurrentDoc(doc.name);
-                    }}
-                    type="button"
-                  >
-                    <span className="truncate">{doc.name}</span>
-                  </button>
+                  <div className="flex items-center" key={doc.name}>
+                    <button
+                      className={`box-border flex grow cursor-pointer items-center truncate rounded-md border-start p-2 pr-0 transition-colors hover:border-l-5 ${currentDoc === doc.name && "font-bold"}`}
+                      onClick={() => {
+                        setCurrentDoc(doc.name);
+                      }}
+                      type="button"
+                    >
+                      <span className="w-full truncate text-left">
+                        {doc.name}
+                      </span>
+                    </button>
+                    <DeleteButton docName={doc.name} />
+                  </div>
                 ))
               )}
             </div>
