@@ -21,12 +21,19 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@hocuspocus/extension-database": "^3.4.0",
     "@hocuspocus/server": "^3.4.0",
     "@nestjs/common": "^11.1.7",
     "@nestjs/core": "^11.1.7",
     "@nestjs/platform-express": "^11.1.7",
+    "@nestjs/platform-socket.io": "^11.1.8",
+    "@nestjs/websockets": "^11.1.8",
+    "@types/pg": "^8.15.6",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.6",

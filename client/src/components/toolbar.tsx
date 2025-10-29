@@ -10,6 +10,8 @@ import {
   List,
   ListOrdered,
   MessageSquareQuote,
+  PanelLeftClose,
+  PanelLeftOpen,
   PanelRightClose,
   PanelRightOpen,
   Strikethrough,
@@ -20,8 +22,10 @@ import { ToolbarButton } from "./toolbar-button";
 
 type ToolbarProps = {
   editor: Editor | null;
-  isSidebarCollapsed: boolean;
-  setIsSidebarCollapsed: (collapsed: boolean) => void;
+  isFilesBarCollapsed: boolean;
+  isUserBarCollapsed: boolean;
+  setIsFilesBarCollapsed: (collapsed: boolean) => void;
+  setIsUserBarCollapsed: (collapsed: boolean) => void;
 };
 
 /**
@@ -37,7 +41,7 @@ type ToolbarProps = {
  * - Heading 3
  * - Bullet list
  * - Ordered list
- * - Code block
+ * - codeblock
  * - Blockquote
  * - Horizontal rule
  *
@@ -46,8 +50,10 @@ type ToolbarProps = {
  */
 export const Toolbar: React.FC<ToolbarProps> = ({
   editor,
-  isSidebarCollapsed,
-  setIsSidebarCollapsed,
+  setIsUserBarCollapsed,
+  isUserBarCollapsed,
+  setIsFilesBarCollapsed,
+  isFilesBarCollapsed,
 }): JSX.Element | null => {
   const editorState = useEditorState({
     editor,
@@ -118,7 +124,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       onClick: () => editor.chain().focus().toggleOrderedList().run(),
     },
     {
-      name: "code block",
+      name: "codeblock",
       display: <Code className="bg-transparent" />,
       onClick: () => editor.chain().focus().toggleCodeBlock().run(),
     },
@@ -131,21 +137,37 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
   return (
     <div className="relative flex border-b px-8 py-4">
-      <div className="flex flex-wrap items-center gap-2 pr-10">
+      <button
+        aria-label={
+          isFilesBarCollapsed
+            ? "Expand files sidebar"
+            : "Collapse files sidebar"
+        }
+        className="absolute top-5 left-1 ml-1 rounded border px-2 py-1 hover:bg-background-hover"
+        onClick={() => setIsFilesBarCollapsed(!isFilesBarCollapsed)}
+        type="button"
+      >
+        {isFilesBarCollapsed ? (
+          <PanelLeftOpen className="bg-transparent" />
+        ) : (
+          <PanelLeftClose className="bg-transparent" />
+        )}
+      </button>
+      <div className="flex grow flex-wrap items-center justify-center gap-2 px-10">
         {toolbarButtons.map((button) => (
           <ToolbarButton
             display={button.display}
             isActive={
               (editorState?.isBold && button.name === "bold") ||
               (editorState?.isItalic && button.name === "italic") ||
-              (editorState?.isStrike && button.name === "strike") ||
+              (editorState?.isStrike && button.name === "strikethrough") ||
               (editorState?.isCode && button.name === "code") ||
               (editorState?.isHeading1 && button.name === "heading 1") ||
               (editorState?.isHeading2 && button.name === "heading 2") ||
               (editorState?.isHeading3 && button.name === "heading 3") ||
               (editorState?.isBulletList && button.name === "bullet list") ||
               (editorState?.isOrderedList && button.name === "ordered list") ||
-              (editorState?.isCodeBlock && button.name === "code block") ||
+              (editorState?.isCodeBlock && button.name === "codeblock") ||
               (editorState?.isBlockquote && button.name === "blockquote") ||
               (editorState?.isHighlight && button.name === "highlight")
             }
@@ -157,12 +179,14 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         ))}
       </div>
       <button
-        aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className="absolute top-5 right-1 m-1 rounded border px-2 py-1 hover:bg-background-hover"
-        onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        aria-label={
+          isUserBarCollapsed ? "Expand user sidebar" : "Collapse user sidebar"
+        }
+        className="absolute top-5 right-1 mr-1 rounded border px-2 py-1 hover:bg-background-hover"
+        onClick={() => setIsUserBarCollapsed(!isUserBarCollapsed)}
         type="button"
       >
-        {isSidebarCollapsed ? (
+        {isUserBarCollapsed ? (
           <PanelRightOpen className="bg-transparent" />
         ) : (
           <PanelRightClose className="bg-transparent" />

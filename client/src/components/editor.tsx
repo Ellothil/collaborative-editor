@@ -4,8 +4,10 @@ import { Toolbar } from "./toolbar";
 
 type EditorProps = {
   editor: Editor | null;
-  isSidebarCollapsed: boolean;
-  setIsSidebarCollapsed: (collapsed: boolean) => void;
+  isFilesBarCollapsed: boolean;
+  isUserBarCollapsed: boolean;
+  setIsFilesBarCollapsed: (collapsed: boolean) => void;
+  setIsUserBarCollapsed: (collapsed: boolean) => void;
 };
 
 /**
@@ -19,14 +21,20 @@ type EditorProps = {
  */
 export const EditorComponent = ({
   editor,
-  isSidebarCollapsed,
-  setIsSidebarCollapsed,
+  isFilesBarCollapsed,
+  isUserBarCollapsed,
+  setIsFilesBarCollapsed,
+  setIsUserBarCollapsed,
 }: EditorProps): JSX.Element => (
-  <div className="flex h-full grow flex-col overflow-y-auto rounded-xl border">
+  <div
+    className={`flex h-full grow flex-col overflow-y-auto transition-all duration-300 ease-in-out ${isFilesBarCollapsed && "rounded-l-xl"} ${isUserBarCollapsed && "rounded-r-xl"} border bg-background`}
+  >
     <Toolbar
       editor={editor}
-      isSidebarCollapsed={isSidebarCollapsed}
-      setIsSidebarCollapsed={setIsSidebarCollapsed}
+      isFilesBarCollapsed={isFilesBarCollapsed}
+      isUserBarCollapsed={isUserBarCollapsed}
+      setIsFilesBarCollapsed={setIsFilesBarCollapsed}
+      setIsUserBarCollapsed={setIsUserBarCollapsed}
     />
     <EditorContent
       className="h-full flex-1 overflow-y-auto p-8"

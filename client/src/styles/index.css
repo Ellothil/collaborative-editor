@@ -18,11 +18,16 @@
   /* light grey */
   --color-muted: #94a3b8;
   --color-border: #334155;
+
+  /* gradient colors */
+  --color-start: #5c8fd6;
+  --color-middle: #3b82f6;
+  --color-end: #1e3a8a;
 }
 
 /* Base styles */
 @layer base {
   * {
-    @apply border-border bg-background text-foreground;
+    @apply border-border bg-transparent text-foreground;
   }
 }
