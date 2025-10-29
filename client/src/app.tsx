@@ -12,7 +12,7 @@ import { SidebarFiles } from "./components/sidebar-files";
  * @returns {JSX.Element} The JSX element representing the application base.
  */
 function App(): JSX.Element {
-  const [currentDoc, setCurrentDoc] = useState<string>("welcome");
+  const [currentDoc, setCurrentDoc] = useState<string>("Welcome (undeletable)");
 
   const [user] = useState(useName());
   const { provider, yDoc } = useCollaboration(user, currentDoc);

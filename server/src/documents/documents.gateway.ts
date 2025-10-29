@@ -22,7 +22,7 @@ type User = {
 @WebSocketGateway({
   cors: {
     origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE"],
   },
 })
 export class DocumentsGateway
@@ -42,6 +42,9 @@ export class DocumentsGateway
     const events = this.documentsService.getDocumentEvents();
     events.on("documentCreated", (document) => {
       this.server.emit("documentCreated", document);
+    });
+    events.on("documentDeleted", (document) => {
+      this.server.emit("documentDeleted", document);
     });
   }
 

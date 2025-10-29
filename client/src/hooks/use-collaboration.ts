@@ -25,7 +25,7 @@ type CollaborationResult = {
  */
 export const useCollaboration = (
   user: User,
-  documentName = "welcome"
+  documentName = "Welcome (undeletable)"
 ): CollaborationResult => {
   const { provider, yDoc } = useMemo(() => {
     const existing = sharedDocs.get(documentName);
