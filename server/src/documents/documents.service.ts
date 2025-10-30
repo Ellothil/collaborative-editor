@@ -2,6 +2,8 @@ import { EventEmitter } from "node:events";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Pool } from "pg";
 
+console.log("Debug (USER): ", process.env.DB_USER);
+
 // Initialize PostgreSQL connection pool
 const pool = new Pool({
   user: process.env.DB_USER || "postgres",
