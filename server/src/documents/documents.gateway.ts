@@ -29,22 +29,26 @@ export class DocumentsGateway
   server: Server;
 
   private readonly documentsService: DocumentsService;
-  private readonly configService: ConfigService;
   private readonly onlineUsers = new Map<string, User>();
+  private readonly cors_options;
 
   constructor(
     documentsService: DocumentsService,
-    configService: ConfigService
+    private readonly configService: ConfigService
   ) {
     this.documentsService = documentsService;
-    this.configService = configService;
+    this.cors_options = {
+      origin: this.configService.get("CORS_ORIGINS")?.split(","),
+    };
   }
 
   afterInit(server: Server) {
+    console.log("CORS options in gateway:", this.cors_options);
     // Configure CORS dynamically
-    const allowedOrigins = this.configService
-      .get("CORS_ORIGINS")
-      ?.split(",") || ["http://localhost:5173", "http://127.0.0.1:5173"];
+    const allowedOrigins = this.cors_options || [
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+    ];
 
     server.engine.opts.cors = {
       origin: allowedOrigins,

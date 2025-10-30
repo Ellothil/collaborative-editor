@@ -19,6 +19,8 @@ async function bootstrap() {
     "http://localhost:3000",
   ];
 
+  console.log("Allowed origins in main:", allowedOrigins);
+
   app.enableCors({
     origin: allowedOrigins,
     credentials: true,
