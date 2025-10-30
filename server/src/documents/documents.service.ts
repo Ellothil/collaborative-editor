@@ -1,15 +1,9 @@
 import { EventEmitter } from "node:events";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Pool } from "pg";
 
-// Initialize PostgreSQL connection pool
-const pool = new Pool({
-  user: process.env.DB_USER || "postgres",
-  host: process.env.DB_HOST || "localhost",
-  database: process.env.DB_NAME || "collaborative_editor",
-  password: process.env.DB_PASSWORD || "postgres",
-  port: Number.parseInt(process.env.DB_PORT || "5432", 10),
-});
+// biome-ignore lint/style/useImportType: <explanation>
+import { ConfigService } from "@nestjs/config";
+import { Pool } from "pg";
 
 export type Document = {
   name: string;
@@ -22,6 +16,18 @@ export type Document = {
 @Injectable()
 export class DocumentsService {
   private readonly eventEmitter = new EventEmitter();
+  private readonly pool: Pool;
+
+  constructor(private configService: ConfigService) {
+    // Initialize PostgreSQL connection pool
+    this.pool = new Pool({
+      user: this.configService.get("DB_USER") || "postgres",
+      host: this.configService.get("DB_HOST") || "localhost",
+      database: this.configService.get("DB_NAME") || "collaborative_editor",
+      password: this.configService.get("DB_PASSWORD") || "postgres",
+      port: Number.parseInt(this.configService.get("DB_PORT") || "5433", 10),
+    });
+  }
 
   /**
    * Get the event emitter for document changes
@@ -36,7 +42,7 @@ export class DocumentsService {
    */
   async getAllDocuments(): Promise<Document[]> {
     try {
-      const result = await pool.query(
+      const result = await this.pool.query(
         "SELECT name, updated_at FROM documents ORDER BY updated_at DESC"
       );
       return result.rows;
@@ -55,7 +61,7 @@ export class DocumentsService {
    */
   async createDocument(name: string): Promise<Document> {
     try {
-      const result = await pool.query(
+      const result = await this.pool.query(
         "INSERT INTO documents (name) VALUES ($1) RETURNING name, updated_at",
         [name]
       );
@@ -84,7 +90,7 @@ export class DocumentsService {
    */
   async getDocument(name: string): Promise<Document | null> {
     try {
-      const result = await pool.query(
+      const result = await this.pool.query(
         "SELECT name, updated_at FROM documents WHERE name = $1",
         [name]
       );
@@ -104,9 +110,10 @@ export class DocumentsService {
    */
   async deleteDocument(name: string): Promise<boolean> {
     try {
-      const result = await pool.query("DELETE FROM documents WHERE name = $1", [
-        name,
-      ]);
+      const result = await this.pool.query(
+        "DELETE FROM documents WHERE name = $1",
+        [name]
+      );
       const deleted = (result.rowCount ?? 0) > 0;
       if (deleted) {
         this.eventEmitter.emit("documentDeleted", { name });

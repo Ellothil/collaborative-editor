@@ -1,6 +1,7 @@
 import { HocuspocusProvider } from "@hocuspocus/provider";
 import { useEffect, useMemo } from "react";
 import { Doc } from "yjs";
+import { env } from "@/config/env";
 import type { User } from "@/types/user";
 
 // Shared document store
@@ -36,7 +37,10 @@ export const useCollaboration = (
 
     const newDoc = new Doc();
     const newProvider = new HocuspocusProvider({
-      url: "ws://localhost:1234",
+      url: env.HOCUSPOCUS_URL.replace("http://", "ws://").replace(
+        "https://",
+        "wss://"
+      ),
       name: documentName,
       document: newDoc,
     });

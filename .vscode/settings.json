@@ -32,5 +32,8 @@
     "source.fixAll.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
-  "cSpell.words": ["BYTEA", "ydoc"]
+  "cSpell.words": ["BYTEA", "ydoc"],
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

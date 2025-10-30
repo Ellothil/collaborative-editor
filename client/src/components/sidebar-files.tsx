@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { env } from "@/config/env";
 import { AddButton } from "./add-button";
 import { DeleteButton } from "./delete-button";
 
@@ -29,7 +30,7 @@ export const SidebarFiles = ({
       setLoading(true);
       setError(null);
 
-      const response = await axios.get("http://localhost:3000/api/documents");
+      const response = await axios.get(`${env.BACKEND_URL}/api/documents`);
       setDocuments(response.data);
     } catch (err) {
       const errorMessage = axios.isAxiosError(err)
@@ -47,7 +48,10 @@ export const SidebarFiles = ({
 
   // Refresh documents when a new document is created or deleted
   useEffect(() => {
-    const socket = io("http://localhost:3000");
+    const socket = io(env.SOCKET_URL, {
+      transports: ["websocket", "polling"],
+      withCredentials: true,
+    });
 
     socket.on("documentCreated", () => {
       fetchDocuments();

@@ -1,3 +1,5 @@
+// biome-ignore lint/correctness/noUnusedImports: <explanation>
+import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 
@@ -8,17 +10,22 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const DEFAULT_PORT = 3000;
   const app = await NestFactory.create(AppModule);
-  
-  // Enable CORS for client requests from port 5173
+  const configService = app.get(ConfigService);
+
+  // Enable CORS for client requests
+  const allowedOrigins = configService.get("CORS_ORIGINS")?.split(",") || [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+  ];
+
+  console.log("Allowed origins in main:", allowedOrigins);
+
   app.enableCors({
-    origin: [
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "http://localhost:3000",
-    ],
+    origin: allowedOrigins,
     credentials: true,
   });
-  
-  await app.listen(process.env.PORT ?? DEFAULT_PORT);
+
+  await app.listen(configService.get("PORT") || DEFAULT_PORT);
 }
 bootstrap();
