@@ -39,6 +39,8 @@ export class DocumentsGateway
     this.documentsService = documentsService;
     this.cors_options = {
       origin: this.configService.get("CORS_ORIGINS")?.split(","),
+      methods: ["GET", "POST", "DELETE"],
+      credentials: true,
     };
   }
 
