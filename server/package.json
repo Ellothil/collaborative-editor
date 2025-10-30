@@ -24,6 +24,7 @@
     "@hocuspocus/extension-database": "^3.4.0",
     "@hocuspocus/server": "^3.4.0",
     "@nestjs/common": "^11.1.7",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.7",
     "@nestjs/platform-express": "^11.1.7",
     "@nestjs/platform-socket.io": "^11.1.8",
