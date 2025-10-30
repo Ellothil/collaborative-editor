@@ -8,7 +8,7 @@ const pool = new Pool({
   host: process.env.DB_HOST || "localhost",
   database: process.env.DB_NAME || "collaborative_editor",
   password: process.env.DB_PASSWORD || "postgres",
-  port: Number.parseInt(process.env.DB_PORT || "5432", 10),
+  port: Number.parseInt(process.env.DB_PORT || "5433", 10),
 });
 
 export type Document = {
