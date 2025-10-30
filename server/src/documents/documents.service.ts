@@ -1,6 +1,8 @@
 import { EventEmitter } from "node:events";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import type { ConfigService } from "@nestjs/config";
+
+// biome-ignore lint/style/useImportType: <explanation>
+import { ConfigService } from "@nestjs/config";
 import { Pool } from "pg";
 
 export type Document = {
