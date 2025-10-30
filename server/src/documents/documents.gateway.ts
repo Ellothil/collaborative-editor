@@ -1,5 +1,7 @@
 /** biome-ignore-all lint/suspicious/noEmptyBlockStatements: <> */
 import { Injectable } from "@nestjs/common";
+// biome-ignore lint/style/useImportType: <>
+import { ConfigService } from "@nestjs/config";
 import {
   type OnGatewayConnection,
   type OnGatewayDisconnect,
@@ -19,12 +21,7 @@ type User = {
 };
 
 @Injectable()
-@WebSocketGateway({
-  cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "DELETE"],
-  },
-})
+@WebSocketGateway()
 export class DocumentsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -32,13 +29,31 @@ export class DocumentsGateway
   server: Server;
 
   private readonly documentsService: DocumentsService;
+  private readonly configService: ConfigService;
   private readonly onlineUsers = new Map<string, User>();
 
-  constructor(documentsService: DocumentsService) {
+  constructor(
+    documentsService: DocumentsService,
+    configService: ConfigService
+  ) {
     this.documentsService = documentsService;
+    this.configService = configService;
   }
 
-  afterInit() {
+  afterInit(server: Server) {
+    // Configure CORS dynamically
+    const allowedOrigins = this.configService
+      .get("CORS_ORIGINS")
+      ?.split(",") || ["http://localhost:5173", "http://127.0.0.1:5173"];
+
+    server.engine.opts.cors = {
+      origin: allowedOrigins,
+      methods: ["GET", "POST", "DELETE"],
+      credentials: true,
+    };
+
+    this.server.engine.opts.transports = ["websocket", "polling"];
+
     const events = this.documentsService.getDocumentEvents();
     events.on("documentCreated", (document) => {
       this.server.emit("documentCreated", document);
