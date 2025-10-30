@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Trash } from "lucide-react";
+import { env } from "@/config/env";
 
 type DeleteButtonProps = {
   docName: string;
@@ -16,7 +17,7 @@ export const DeleteButton = ({ docName }: DeleteButtonProps) => {
     }
 
     try {
-      await axios.delete("http://localhost:3000/api/documents", {
+      await axios.delete(`${env.BACKEND_URL}/api/documents`, {
         data: { name: docName },
       });
     } catch (err) {

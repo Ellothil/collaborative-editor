@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Plus } from "lucide-react";
+import { env } from "@/config/env";
 
 type AddButtonProps = {
   setCurrentDoc: (name: string) => void;
@@ -8,7 +9,7 @@ type AddButtonProps = {
 export const AddButton = ({ setCurrentDoc }: AddButtonProps) => {
   const createNewDocument = async (name: string) => {
     try {
-      await axios.post("http://localhost:3000/api/documents", { name });
+      await axios.post(`${env.BACKEND_URL}/api/documents`, { name });
       setCurrentDoc(name);
     } catch (err) {
       // biome-ignore lint/style/noMagicNumbers: <HTTP 409 Conflict>

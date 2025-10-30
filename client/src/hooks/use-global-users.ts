@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { io, type Socket } from "socket.io-client";
+import { env } from "@/config/env";
 import type { User } from "@/types/user";
 
 type OnlineUser = User & {
@@ -23,7 +24,7 @@ export const useGlobalUsers = (
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3000");
+    const newSocket = io(env.SOCKET_URL);
     setSocket(newSocket);
 
     newSocket.on("connect", () => {

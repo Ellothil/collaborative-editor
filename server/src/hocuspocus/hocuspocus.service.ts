@@ -49,14 +49,19 @@ export class HocuspocusService implements OnModuleInit, OnModuleDestroy {
 
   /**
    * Initializes the Hocuspocus server when the module loads.
-   * Creates a new server instance and starts listening on port 1234.
+   * Creates a new server instance and starts listening on the configured port.
    */
   async onModuleInit() {
     // Ensure the documents table exists before starting the server
     await this.ensureDocumentsTableExists();
 
+    const hocuspocusPort = Number.parseInt(
+      process.env.HOCUSPOCUS_PORT || "1234",
+      10
+    );
+
     this.server = new Server({
-      port: 1234,
+      port: hocuspocusPort,
       extensions: [
         new Database({
           fetch: async ({ documentName }) => {
@@ -80,7 +85,7 @@ export class HocuspocusService implements OnModuleInit, OnModuleDestroy {
 
     try {
       await this.server.listen();
-      this.logger.log("Hocuspocus server started on port 1234");
+      this.logger.log(`Hocuspocus server started on port ${hocuspocusPort}`);
     } catch (error) {
       this.logger.error("Failed to start Hocuspocus server", error);
       throw error;
