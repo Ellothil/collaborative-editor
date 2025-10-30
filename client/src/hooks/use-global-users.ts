@@ -24,7 +24,10 @@ export const useGlobalUsers = (
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    const newSocket = io(env.SOCKET_URL);
+    const newSocket = io(env.SOCKET_URL, {
+      transports: ["websocket", "polling"],
+      withCredentials: true,
+    });
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
