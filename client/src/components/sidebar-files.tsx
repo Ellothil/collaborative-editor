@@ -48,7 +48,10 @@ export const SidebarFiles = ({
 
   // Refresh documents when a new document is created or deleted
   useEffect(() => {
-    const socket = io(env.SOCKET_URL);
+    const socket = io(env.SOCKET_URL, {
+      transports: ["websocket", "polling"],
+      withCredentials: true,
+    });
 
     socket.on("documentCreated", () => {
       fetchDocuments();
