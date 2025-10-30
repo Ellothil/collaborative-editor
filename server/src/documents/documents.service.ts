@@ -19,7 +19,6 @@ export class DocumentsService {
   private readonly pool: Pool;
 
   constructor(private configService: ConfigService) {
-    console.log("User:", this.configService.get("DB_USER"));
     // Initialize PostgreSQL connection pool
     this.pool = new Pool({
       user: this.configService.get("DB_USER") || "postgres",

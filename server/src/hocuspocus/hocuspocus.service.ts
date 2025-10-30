@@ -6,16 +6,9 @@ import {
   type OnModuleDestroy,
   type OnModuleInit,
 } from "@nestjs/common";
+// biome-ignore lint/style/useImportType: <explanation>
+import { ConfigService } from "@nestjs/config";
 import { Pool } from "pg";
-
-// Initialize PostgreSQL connection pool
-const pool = new Pool({
-  user: process.env.DB_USER || "postgres",
-  host: process.env.DB_HOST || "localhost",
-  database: process.env.DB_NAME || "collaborative_editor",
-  password: process.env.DB_PASSWORD || "postgres",
-  port: Number.parseInt(process.env.DB_PORT || "5433", 10),
-});
 
 /**
  * Service that manages the Hocuspocus WebSocket server for collaborative editing.
@@ -25,6 +18,18 @@ const pool = new Pool({
 export class HocuspocusService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(HocuspocusService.name);
   private server: Server;
+  private readonly pool: Pool;
+
+  constructor(private configService: ConfigService) {
+    // Initialize PostgreSQL connection pool
+    this.pool = new Pool({
+      user: this.configService.get("DB_USER") || "postgres",
+      host: this.configService.get("DB_HOST") || "localhost",
+      database: this.configService.get("DB_NAME") || "collaborative_editor",
+      password: this.configService.get("DB_PASSWORD") || "postgres",
+      port: Number.parseInt(this.configService.get("DB_PORT") || "5433", 10),
+    });
+  }
 
   /**
    * Creates the documents table if it doesn't exist.
@@ -33,7 +38,7 @@ export class HocuspocusService implements OnModuleInit, OnModuleDestroy {
   private async ensureDocumentsTableExists() {
     try {
       // Create table if it does not exist
-      await pool.query(`
+      await this.pool.query(`
         CREATE TABLE IF NOT EXISTS documents (
           name VARCHAR(255) PRIMARY KEY,
           data BYTEA,
@@ -56,7 +61,7 @@ export class HocuspocusService implements OnModuleInit, OnModuleDestroy {
     await this.ensureDocumentsTableExists();
 
     const hocuspocusPort = Number.parseInt(
-      process.env.HOCUSPOCUS_PORT || "1234",
+      this.configService.get("HOCUSPOCUS_PORT") || "1234",
       10
     );
 
@@ -65,14 +70,14 @@ export class HocuspocusService implements OnModuleInit, OnModuleDestroy {
       extensions: [
         new Database({
           fetch: async ({ documentName }) => {
-            const res = await pool.query(
+            const res = await this.pool.query(
               "SELECT data FROM documents WHERE name = $1",
               [documentName]
             );
             return res.rows[0]?.data || null;
           },
           store: async ({ documentName, state }) => {
-            await pool.query(
+            await this.pool.query(
               `INSERT INTO documents(name, data)
            VALUES ($1, $2)
            ON CONFLICT (name) DO UPDATE SET data = EXCLUDED.data`,
