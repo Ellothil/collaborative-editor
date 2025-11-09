@@ -6,6 +6,7 @@ A real-time collaborative text editor built with modern web technologies. Multip
 
 ## Getting Started
 - Open the linked website ([nils-reith.de](https://nils-reith.de/)) in two different browsers or tabs on one or multiple desktop devices.
+  - IMPORTANT: Tested with Chrome on Windows, some AI-heavy Browsers like Arc or Comet might not work because of browser-side bugs.
 - You can then start writing into the default document and collaborate in realtime with other users or create more documents (or delete them)
 - You will see the live position of other users' cursors and their highlighted text
 
